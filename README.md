@@ -1,6 +1,6 @@
 # E2E-Testing-Playwright
 
-Test Cases
+## Test Cases
 
 ### 🟦 登入流程測試案例
 | No. | case name|case description|purpose|execute|
