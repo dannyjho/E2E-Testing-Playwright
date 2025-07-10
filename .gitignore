@@ -9,7 +9,6 @@ playwright/.cache/
 allure-results/
 *.trace
 *.zip
-*.json
 *.md
 
 # === 截圖與錄影檔案 ===
