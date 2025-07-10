@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe.serial('OAuth Flow Tests', () => {
     test('TC04 - 切換至密碼登入成功', async ({ page }) => {
         // 前往會員中心頁面（直接進入目標畫面）
-        await page.goto('https://www.dogcatstar.com/visitor-my-account/', { waitUntil: 'domcontentloaded' });
+        await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
 
         // 等待 登入/註冊 按鈕出現並可點
         const registButton = page.getByRole('button', { name: '登入/註冊' });
@@ -12,7 +12,9 @@ test.describe.serial('OAuth Flow Tests', () => {
         await registButton.click();
 
         // 確保登入畫面載入完成（有 +886）
-        await expect(page.locator('div[role="combobox"]')).toContainText('+886', { timeout: 10000 });
+        const combobox = page.locator('div[role="combobox"]');
+        await combobox.waitFor({ state: 'visible', timeout: 15000 });
+        await expect(combobox).toContainText('+886', { timeout: 15000 });
 
         // 輸入手機號碼
         await page.locator('input[name="username"]').fill('932579974');

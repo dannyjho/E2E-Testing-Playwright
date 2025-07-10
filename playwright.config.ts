@@ -1,57 +1,45 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
-  timeout: 60 * 1000, // 每個 test 最長執行時間（預設是 30 秒）
-  use: {
-    actionTimeout: 15 * 1000,       // 每個 click/fill 等單一動作的最大時間
-    navigationTimeout: 30 * 1000,   // 導航類操作如 page.goto/waitForURL 的最大等待時間
-    headless: true,                 // CI 通常建議開 headless
-    viewport: { width: 1920, height: 1080 }, // 設定螢幕爲 FullHD
-    screenshot: 'only-on-failure', // 出錯才截圖
-    video: 'retain-on-failure',    // 出錯才保留影片
-  },
   testDir: './tests',
-  /* Run tests in files in parallel */
+  timeout: 90 * 1000, // 單個 test 最長時間
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 3 : undefined,
+  workers: process.env.CI ? 1 : undefined, // CI 限制 worker 避免 race condition
 
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  use: {
+    baseURL: 'https://www.dogcatstar.com', // 可使用 page.goto('/visitor-my-account')
+    actionTimeout: 30 * 1000,
+    navigationTimeout: 60 * 1000,
+    headless: true,
+    viewport: { width: 1920, height: 1080 },
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
+  },
+
   reporter: [
-    ['list'],                 // 終端輸出測試結果
-    ['allure-playwright']     // 輸出 Allure raw data 至 ./allure-results
+    ['list'],
+    ['allure-playwright'], // 輸出 Allure 至 ./allure-results
   ],
 
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    /* Collect trace when retrying the failed test. */
-    trace: 'on-first-retry',
-    // baseURL: 'http://localhost:3000', // 你可視情況取消註解
-  },
-
-  /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], viewport: { width: 1920, height: 1080 } },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'], viewport: { width: 1920, height: 1080 } },
     },
   ],
 
+  // 可加上 Web Server 設定（非必要，若需本地環境支援）
   // webServer: {
   //   command: 'npm run start',
   //   url: 'http://localhost:3000',

@@ -1,7 +1,39 @@
-
-# Playwright
+# === Node.js 標準忽略 ===
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+
+# === Playwright 測試產物 ===
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+allure-results/
+*.trace
+*.zip
+*.json
+*.md
+
+# === 截圖與錄影檔案 ===
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.webm
+*.mov
+*.avi
+*.mkv
+
+# === 系統產生檔案 ===
+.DS_Store
+Thumbs.db
+
+# === 日誌檔案 ===
+*.log
+
+# === 暫存/備份/開發環境設定 ===
+*.swp
+*.tmp
+*.bak
+*.old
+.env
+.env.local
