@@ -1,50 +1,50 @@
 import { test, expect } from '@playwright/test';
 
-
 test.describe.serial('OAuth Flow Tests', () => {
     test('TC04 - 切換至密碼登入成功', async ({ page }) => {
-        // 前往會員中心
-        await page.goto('https://www.dogcatstar.com/visitor-my-account/');
-        await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
+        // 前往會員中心頁面（直接進入目標畫面）
+        await page.goto('https://www.dogcatstar.com/visitor-my-account/', { waitUntil: 'load' });
 
-        // 等待畫面讀取
+        // 等待 登入/註冊 按鈕出現並可點
         const registButton = page.getByRole('button', { name: '登入/註冊' });
-
-        // 點擊登入進入登入畫面
-        await expect(registButton).toBeVisible();
+        await expect(registButton).toBeVisible({ timeout: 15000 });
+        await expect(registButton).toBeEnabled();
         await registButton.click();
 
-        // 輸入帳號並切換密碼登入
-        await expect(page.locator('div[role="combobox"]')).toContainText('+886');
+        // 確保登入畫面載入完成（有 +886）
+        await expect(page.locator('div[role="combobox"]')).toContainText('+886', { timeout: 10000 });
 
         // 輸入手機號碼
         await page.locator('input[name="username"]').fill('932579974');
-        const loginButton = page.getByRole('button', { name: '登入/註冊' });
-        await expect(loginButton).toBeEnabled();
 
-        // 點擊登入/註冊按鈕
+        // 等待登入按鈕出現並可點
+        const loginButton = page.getByRole('button', { name: '登入/註冊' });
+        await expect(loginButton).toBeVisible({ timeout: 10000 });
+        await expect(loginButton).toBeEnabled({ timeout: 10000 });
         await loginButton.click();
 
+        // 切換到 密碼登入
         const switchToPasswordButton = page.getByRole('button', { name: '密碼登入' });
-
-        // 等待按鈕出現
-        await expect(switchToPasswordButton).toBeVisible();
-
-        // 點擊按鈕
+        await expect(switchToPasswordButton).toBeVisible({ timeout: 20000 });
         await switchToPasswordButton.click();
 
-        // 等待密碼輸入框出現
+        // 等待密碼輸入欄出現
         const passwordInput = page.locator('input[type="password"]');
-        await expect(passwordInput).toBeVisible();
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
 
         // 輸入密碼
         await passwordInput.fill('qaz852456');
 
+        // 點擊 確認 按鈕
         const confirmBtn = page.getByRole('button', { name: '確認' });
+        await expect(confirmBtn).toBeVisible({ timeout: 10000 });
         await expect(confirmBtn).toBeEnabled();
-        await confirmBtn.click();
+        await Promise.all([
+            page.waitForURL(/\/my-account/, { timeout: 30000 }),
+            confirmBtn.click(),
+        ]);
 
         // 驗證是否導入會員中心
-        await expect(page).toHaveTitle(/會員專區/);
-    })
+        await expect(page).toHaveTitle(/會員專區/, { timeout: 10000 });
+    });
 });
