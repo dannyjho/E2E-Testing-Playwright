@@ -9,12 +9,9 @@ export default defineConfig({
     actionTimeout: 15 * 1000,       // 每個 click/fill 等單一動作的最大時間
     navigationTimeout: 30 * 1000,   // 導航類操作如 page.goto/waitForURL 的最大等待時間
     headless: true,                 // CI 通常建議開 headless
+    viewport: { width: 1920, height: 1080 }, // 設定螢幕爲 FullHD
     screenshot: 'only-on-failure', // 出錯才截圖
     video: 'retain-on-failure',    // 出錯才保留影片
-    launchOptions: {
-      args: ['--start-maximized'],
-    },
-    viewport: null, // 跟隨視窗大小
   },
   testDir: './tests',
   /* Run tests in files in parallel */
