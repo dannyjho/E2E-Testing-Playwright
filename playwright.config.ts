@@ -11,6 +11,10 @@ export default defineConfig({
     headless: true,                 // CI 通常建議開 headless
     screenshot: 'only-on-failure', // 出錯才截圖
     video: 'retain-on-failure',    // 出錯才保留影片
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
+    viewport: null, // 跟隨視窗大小
   },
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -18,7 +22,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 3 : undefined,
 
