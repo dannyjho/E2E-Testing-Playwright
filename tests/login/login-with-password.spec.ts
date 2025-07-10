@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test('TC04 - 切換至密碼登入成功', async ({ page }) => {
     // 前往會員中心
     await page.goto('https://www.dogcatstar.com/visitor-my-account/');
+    await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
 
     // 等待畫面讀取
     const registButton = page.getByRole('button', { name: '登入/註冊' });
