@@ -20,5 +20,5 @@ test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     await page.getByRole('link', { name: 'Not now' }).click();
 
     // 驗證是否導回會員中心，並且 URL 帶有訊息資訊
-    await page.waitForURL(/loginByFacebook=false&error=200/);
+    await expect(page).toHaveURL(/loginByFacebook=false&error=200/, { timeout: 10000 });
 });

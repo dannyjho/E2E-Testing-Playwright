@@ -1,47 +1,50 @@
 import { test, expect } from '@playwright/test';
 
-test('TC04 - 切換至密碼登入成功', async ({ page }) => {
-    // 前往會員中心
-    await page.goto('https://www.dogcatstar.com/visitor-my-account/');
-    await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
 
-    // 等待畫面讀取
-    const registButton = page.getByRole('button', { name: '登入/註冊' });
+test.describe.serial('OAuth Flow Tests', () => {
+    test('TC04 - 切換至密碼登入成功', async ({ page }) => {
+        // 前往會員中心
+        await page.goto('https://www.dogcatstar.com/visitor-my-account/');
+        await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
 
-    // 點擊登入進入登入畫面
-    await expect(registButton).toBeVisible();
-    await registButton.click();
+        // 等待畫面讀取
+        const registButton = page.getByRole('button', { name: '登入/註冊' });
 
-    // 輸入帳號並切換密碼登入
-    await expect(page.locator('div[role="combobox"]')).toContainText('+886');
+        // 點擊登入進入登入畫面
+        await expect(registButton).toBeVisible();
+        await registButton.click();
 
-    // 輸入手機號碼
-    await page.locator('input[name="username"]').fill('932579974');
-    const loginButton = page.getByRole('button', { name: '登入/註冊' });
-    await expect(loginButton).toBeEnabled();
+        // 輸入帳號並切換密碼登入
+        await expect(page.locator('div[role="combobox"]')).toContainText('+886');
 
-    // 點擊登入/註冊按鈕
-    await loginButton.click();
+        // 輸入手機號碼
+        await page.locator('input[name="username"]').fill('932579974');
+        const loginButton = page.getByRole('button', { name: '登入/註冊' });
+        await expect(loginButton).toBeEnabled();
 
-    const switchToPasswordButton = page.getByRole('button', { name: '密碼登入' });
+        // 點擊登入/註冊按鈕
+        await loginButton.click();
 
-    // 等待按鈕出現
-    await expect(switchToPasswordButton).toBeVisible();
+        const switchToPasswordButton = page.getByRole('button', { name: '密碼登入' });
 
-    // 點擊按鈕
-    await switchToPasswordButton.click();
+        // 等待按鈕出現
+        await expect(switchToPasswordButton).toBeVisible();
 
-    // 等待密碼輸入框出現
-    const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
+        // 點擊按鈕
+        await switchToPasswordButton.click();
 
-    // 輸入密碼
-    await passwordInput.fill('qaz852456');
+        // 等待密碼輸入框出現
+        const passwordInput = page.locator('input[type="password"]');
+        await expect(passwordInput).toBeVisible();
 
-    const confirmBtn = page.getByRole('button', { name: '確認' });
-    await expect(confirmBtn).toBeEnabled();
-    await confirmBtn.click();
+        // 輸入密碼
+        await passwordInput.fill('qaz852456');
 
-    // 驗證是否導入會員中心
-    await expect(page).toHaveTitle(/會員專區/);
+        const confirmBtn = page.getByRole('button', { name: '確認' });
+        await expect(confirmBtn).toBeEnabled();
+        await confirmBtn.click();
+
+        // 驗證是否導入會員中心
+        await expect(page).toHaveTitle(/會員專區/);
+    })
 });
