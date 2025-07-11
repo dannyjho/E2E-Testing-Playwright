@@ -1,7 +1,28 @@
 import { test, expect } from '@playwright/test';
 
 test.describe.serial('OAuth Flow Tests', () => {
-    test('TC04 - 切換至密碼登入成功', async ({ page }) => {
+    test('TC04 - 切換至密碼登入成功', async ({ page, context }) => {
+        await context.addCookies([
+            {
+                name: 'woocommerce_currency', // 根據實際名稱調整
+                value: 'TWD',
+                domain: 'www.dogcatstar.com',
+                path: '/',
+                httpOnly: false,
+                secure: true,
+                sameSite: 'Lax',
+            },
+            {
+                name: 'lang',
+                value: 'zh_TW', // 或 tw, zh-tw
+                domain: 'www.dogcatstar.com',
+                path: '/',
+                httpOnly: false,
+                secure: true,
+                sameSite: 'Lax',
+            }
+        ]);
+
         // 前往會員中心頁面（直接進入目標畫面）
         await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
 
