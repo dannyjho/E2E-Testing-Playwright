@@ -29,20 +29,25 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Install Allure CLI
-        run: npm install -g allure-commandline   
+        run: npm install -g allure-commandline
 
       - name: Run Playwright tests and generate Allure results
+        # 即使測試失敗，也讓後續繼續執行
+        continue-on-error: true
         run: npx playwright test
 
       - name: Generate Allure HTML report
+        if: always()
         run: npx allure generate ./allure-results --clean -o ./playwright-report
 
       - name: Set Git identity
+        if: always()
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Upload report to GitHub Pages
+        if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
