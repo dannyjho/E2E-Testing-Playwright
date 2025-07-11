@@ -6,29 +6,10 @@ test.describe.serial('OAuth Flow Tests', () => {
         // 前往會員中心頁面（直接進入目標畫面）
         await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
 
-        const countrySelect = page.locator('select[data-testid="select-change-country"]');
-        const localeSelect = page.locator('select[data-testid="select-change-locale"]');
-
-        if (await countrySelect.isVisible()) {
-            console.log('國家選單已出現，設定為 TW');
-            await countrySelect.selectOption('TW');
-
-            if (await localeSelect.isVisible()) {
-                await localeSelect.selectOption('zh_TW');
-            }
-
-            const confirmButton = page.getByRole('button', {
-                name: /^(確定前往|Proceed)$/,
-            });
-            await confirmButton.click();
-            if (await confirmButton.isVisible()) {
-                await confirmButton.click();
-                await page.waitForLoadState('networkidle');
-            }
-        }
-
         // 等待 登入/註冊 按鈕出現並可點
-        const registButton = page.getByRole('button', { name: '登入/註冊' });
+        const registButton = page.getByRole('button', {
+            name: /(?:Sign\s*in\s*\/\s*Sign\s*up|登入\s*\/\s*註冊)/i,
+        });
         await expect(registButton).toBeVisible({ timeout: 30000 });
         await expect(registButton).toBeEnabled();
         await registButton.click();
@@ -38,6 +19,9 @@ test.describe.serial('OAuth Flow Tests', () => {
         await combobox.waitFor({ state: 'visible', timeout: 10000 });
         await expect(combobox).toContainText('+886', { timeout: 10000 });
 
+
+        const countrySelect = page.locator('select[data-testid="select-change-country"]');
+        const localeSelect = page.locator('select[data-testid="select-change-locale"]');
         if (await countrySelect.isVisible()) {
             console.log('國家選單已出現，設定為 TW');
             await countrySelect.selectOption('TW');
@@ -61,14 +45,18 @@ test.describe.serial('OAuth Flow Tests', () => {
         await page.locator('input[name="username"]').fill('932579974');
 
         // 等待登入按鈕出現並可點
-        const loginButton = page.getByRole('button', { name: '登入/註冊' });
+        const loginButton = page.getByRole('button', {
+            name: /(?:Sign\s*in\s*\/\s*Sign\s*up|登入\s*\/\s*註冊)/i,
+        });
         await expect(loginButton).toBeVisible({ timeout: 10000 });
         await expect(loginButton).toBeEnabled({ timeout: 10000 });
 
         await loginButton.click();
 
         // 切換到 密碼登入
-        const switchToPasswordButton = page.getByRole('button', { name: '密碼登入' });
+        const switchToPasswordButton = page.getByRole('button', {
+            name: /^(Password Sign in|密碼登入)$/,
+        });
         await expect(switchToPasswordButton).toBeVisible({ timeout: 20000 });
         await switchToPasswordButton.click();
 
@@ -80,7 +68,9 @@ test.describe.serial('OAuth Flow Tests', () => {
         await passwordInput.fill('qaz852456');
 
         // 點擊 確認 按鈕
-        const confirmBtn = page.getByRole('button', { name: '確認' });
+        const confirmBtn = page.getByRole('button', {
+            name: /^(Confirm|確認)$/
+        });
         await expect(confirmBtn).toBeVisible({ timeout: 10000 });
         await expect(confirmBtn).toBeEnabled();
         await Promise.all([
