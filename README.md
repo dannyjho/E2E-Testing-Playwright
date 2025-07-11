@@ -2,7 +2,7 @@
 
 使用 [Playwright](https://playwright.dev/) 針對網站進行 E2E 測試，驗證會員登入與加入商品至購物車的完整流程。
 
-![diagram (1)](https://hackmd.io/_uploads/B1U_UnArlx.png)
+![diagram (1)](https://hackmd.io/_uploads/ByO3F2Aree.png)
 
 ## 📦 技術棧
 
