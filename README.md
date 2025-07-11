@@ -2,6 +2,7 @@
 
 使用 [Playwright](https://playwright.dev/) 針對網站進行 E2E 測試，驗證會員登入與加入商品至購物車的完整流程。
 
+![diagram (1)](https://hackmd.io/_uploads/B1U_UnArlx.png)
 
 ## 📦 技術棧
 
@@ -56,5 +57,7 @@ npx allure serve
 | 10     | 驗證加入上限數量的商品至購物車|調整數量超過上限，並確認畫面數字有沒有跳回庫存數量|商品數量上限會根據每筆商品的 bundle 設定不同|automation|
 
 ### [測試報告連結](https://dannyjho.github.io/E2E-Testing-Playwright/)
+
+
 
 
