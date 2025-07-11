@@ -4,11 +4,23 @@ import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
     await page.goto('/visitor-my-account/');
+    const countrySelect = page.locator('select[data-testid="select-change-country"]');
+    const localeSelect = page.locator('select[data-testid="select-change-locale"]');
 
-    await page.locator('#top-bar').getByTestId('button-change-locale').click();
-    await page.getByTestId('select-change-country').selectOption('TW');
-    await page.getByTestId('select-change-locale').selectOption('zh_TW');
-    await page.getByRole('button', { name: '確定前往' }).click();
+    if (await countrySelect.isVisible()) {
+        console.log('國家選單已出現，設定為 TW');
+        await countrySelect.selectOption('TW');
+
+        if (await localeSelect.isVisible()) {
+            await localeSelect.selectOption('zh_TW');
+        }
+
+        const confirmButton = page.getByRole('button', { name: '確定前往' });
+        if (await confirmButton.isVisible()) {
+            await confirmButton.click();
+            await page.waitForLoadState('networkidle');
+        }
+    }
 
     // 等待 登入/註冊 按鈕出現並可點
     const registButton = page.getByRole('button', { name: '登入/註冊' });
