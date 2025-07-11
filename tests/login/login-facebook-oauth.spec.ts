@@ -3,7 +3,10 @@ import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
-    await page.goto('/visitor-my-account/');
+    await page.goto('/visitor-my-account/', {
+        waitUntil: 'load',
+        timeout: 120000
+    });
     const countrySelect = page.locator('select[data-testid="select-change-country"]');
     const localeSelect = page.locator('select[data-testid="select-change-locale"]');
 

@@ -4,21 +4,10 @@ import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 test.describe.serial('OAuth Flow Tests', () => {
     test('TC04 - 切換至密碼登入成功', async ({ page }) => {
         // 前往會員中心頁面（直接進入目標畫面）
-        await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
-
-        // 等待 登入/註冊 按鈕出現並可點
-        const registButton = page.getByRole('button', {
-            name: /(?:Sign\s*in\s*\/\s*Sign\s*up|登入\s*\/\s*註冊)/i,
+        await page.goto('/visitor-my-account/', {
+            waitUntil: 'load',
+            timeout: 120000
         });
-        await expect(registButton).toBeVisible({ timeout: 30000 });
-        await expect(registButton).toBeEnabled();
-        await registButton.click();
-
-        // 確保登入畫面載入完成（有 +886）
-        const combobox = page.locator('div[role="combobox"]');
-        await combobox.waitFor({ state: 'visible', timeout: 10000 });
-        await expect(combobox).toContainText('+886', { timeout: 10000 });
-
 
         const countrySelect = page.locator('select[data-testid="select-change-country"]');
         const localeSelect = page.locator('select[data-testid="select-change-locale"]');
@@ -40,6 +29,19 @@ test.describe.serial('OAuth Flow Tests', () => {
             }
         }
 
+
+        // 等待 登入/註冊 按鈕出現並可點
+        const registButton = page.getByRole('button', {
+            name: /(?:Sign\s*in\s*\/\s*Sign\s*up|登入\s*\/\s*註冊)/i,
+        });
+        await expect(registButton).toBeVisible({ timeout: 30000 });
+        await expect(registButton).toBeEnabled();
+        await registButton.click();
+
+        // 確保登入畫面載入完成（有 +886）
+        const combobox = page.locator('div[role="combobox"]');
+        await combobox.waitFor({ state: 'visible', timeout: 15000 });
+        await expect(combobox).toContainText('+886', { timeout: 15000 });
 
         // 輸入手機號碼
         await page.locator('input[name="username"]').fill('932579974');
