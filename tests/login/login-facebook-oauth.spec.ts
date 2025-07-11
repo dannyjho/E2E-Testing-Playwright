@@ -5,6 +5,11 @@ test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
     await page.goto('/visitor-my-account/');
 
+    await page.locator('#top-bar').getByTestId('button-change-locale').click();
+    await page.getByTestId('select-change-country').selectOption('TW');
+    await page.getByTestId('select-change-locale').selectOption('zh_TW');
+    await page.getByRole('button', { name: '確定前往' }).click();
+
     // 等待 登入/註冊 按鈕出現並可點
     const registButton = page.getByRole('button', { name: '登入/註冊' });
     await expect(registButton).toBeVisible({ timeout: 10000 });
