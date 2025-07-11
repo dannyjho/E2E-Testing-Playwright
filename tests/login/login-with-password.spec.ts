@@ -1,14 +1,27 @@
-import { test, expect } from '../helpers/customContext';
+import { test, expect } from '@playwright/test';
+import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 
 test.describe.serial('OAuth Flow Tests', () => {
     test('TC04 - 切換至密碼登入成功', async ({ page }) => {
         // 前往會員中心頁面（直接進入目標畫面）
         await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
 
-        const lang = await page.evaluate(() => navigator.language);
-        const time = await page.evaluate(() => new Date().toString());
+        const localePopup = page.locator('select[data-testid="select-change-country"]');
+        if (await localePopup.isVisible({ timeout: 3000 })) {
+            // 選擇「台灣」
+            await page.locator('select[data-testid="select-change-country"]').selectOption('TW');
 
-        expect(lang).toBe('zh-TW');
+            // 選擇「繁中（台灣）」
+            await page.locator('select[data-testid="select-change-locale"]').selectOption('zh_TW');
+
+            // 點擊「確定前往」
+            await page.getByRole('button', { name: '確定前往' }).click();
+
+            // 等待跳轉完成
+            await page.waitForLoadState('networkidle');
+        } else {
+            console.log('✅ Locale popup not shown, skipping locale switch.');
+        }
 
         // 等待 登入/註冊 按鈕出現並可點
         const registButton = page.getByRole('button', { name: '登入/註冊' });

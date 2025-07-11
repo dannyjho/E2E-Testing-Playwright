@@ -1,21 +1,14 @@
-import { test, expect } from '../helpers/customContext';
+import { test, expect } from '@playwright/test';
+import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
     await page.goto('/visitor-my-account/');
 
-    const lang = await page.evaluate(() => navigator.language);
-    const time = await page.evaluate(() => new Date().toString());
-
-    expect(lang).toBe('zh-TW');
-
-    await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
-
-    // 等待畫面讀取
+    // 等待 登入/註冊 按鈕出現並可點
     const registButton = page.getByRole('button', { name: '登入/註冊' });
-
-    // 點擊登入進入登入畫面
-    await expect(registButton).toBeVisible();
+    await expect(registButton).toBeVisible({ timeout: 10000 });
+    await expect(registButton).toBeEnabled();
     await registButton.click();
 
     // 點擊 facebook 快速登入
