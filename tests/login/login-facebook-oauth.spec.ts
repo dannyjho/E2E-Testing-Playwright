@@ -1,8 +1,14 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../helpers/customContext';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
     await page.goto('/visitor-my-account/');
+
+    const lang = await page.evaluate(() => navigator.language);
+    const time = await page.evaluate(() => new Date().toString());
+
+    expect(lang).toBe('zh-TW');
+
     await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
 
     // 等待畫面讀取
@@ -17,7 +23,7 @@ test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     await fbLoginBtn.click();
 
     // 點擊「稍後再說」
-    const cancelLink = page.locator('a[href*="facebook-callback"]', {
+    const cancelLink = page.locator('a[href*="facebook-"]', {
         hasText: /Not now|稍後再說/,
     });
     await expect(cancelLink).toBeVisible({ timeout: 15000 });
