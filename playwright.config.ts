@@ -17,6 +17,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
+    geolocation: { longitude: 121.5654, latitude: 25.0330 }, // 台北101附近
+    permissions: ['geolocation'],
+    locale: 'zh-hant',
+    timezoneId: 'Asia/Taipei',
   },
 
   reporter: [
