@@ -15,7 +15,10 @@ test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
             await localeSelect.selectOption('zh_TW');
         }
 
-        const confirmButton = page.getByRole('button', { name: '確定前往' });
+        const confirmButton = page.getByRole('button', {
+            name: /^(確定前往|Proceed)$/,
+        });
+        await confirmButton.click();
         if (await confirmButton.isVisible()) {
             await confirmButton.click();
             await page.waitForLoadState('networkidle');

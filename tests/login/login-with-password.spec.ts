@@ -17,7 +17,10 @@ test.describe.serial('OAuth Flow Tests', () => {
                 await localeSelect.selectOption('zh_TW');
             }
 
-            const confirmButton = page.getByRole('button', { name: '確定前往' });
+            const confirmButton = page.getByRole('button', {
+                name: /^(確定前往|Proceed)$/,
+            });
+            await confirmButton.click();
             if (await confirmButton.isVisible()) {
                 await confirmButton.click();
                 await page.waitForLoadState('networkidle');
@@ -34,6 +37,25 @@ test.describe.serial('OAuth Flow Tests', () => {
         const combobox = page.locator('div[role="combobox"]');
         await combobox.waitFor({ state: 'visible', timeout: 10000 });
         await expect(combobox).toContainText('+886', { timeout: 10000 });
+
+        if (await countrySelect.isVisible()) {
+            console.log('國家選單已出現，設定為 TW');
+            await countrySelect.selectOption('TW');
+
+            if (await localeSelect.isVisible()) {
+                await localeSelect.selectOption('zh_TW');
+            }
+
+            const confirmButton = page.getByRole('button', {
+                name: /^(確定前往|Proceed)$/,
+            });
+            await confirmButton.click();
+            if (await confirmButton.isVisible()) {
+                await confirmButton.click();
+                await page.waitForLoadState('networkidle');
+            }
+        }
+
 
         // 輸入手機號碼
         await page.locator('input[name="username"]').fill('932579974');
