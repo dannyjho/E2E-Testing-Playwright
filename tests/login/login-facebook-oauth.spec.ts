@@ -1,28 +1,42 @@
 import { test, expect } from '@playwright/test';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
-    await page.goto('https://www.dogcatstar.com');
+    await page.goto('https://www.dogcatstar.com'); // 先讓網站初始化 domain
 
     await page.evaluate(() => {
-        localStorage.setItem(
-            'https://www.dogcatstar.com',
-            JSON.stringify({
-                org_is_active: true,
-                channel_lang: 'zh-hant',
-                template_lang: 'zh-hant',
-                timezone: 'Asia/Taipei',
-                modules: {
-                    web_push: { enabled: false, config: null },
-                    ai_product_search: { enabled: false, config: null },
-                    ai_product_embed: { enabled: false, config: null },
-                },
-                error_tracking_config: {
-                    enabled_platforms: [],
-                    log_levels: [],
-                },
-                enabled_guid_providers: [],
-            })
-        );
+        sessionStorage.setItem('site-info', JSON.stringify([
+            [
+                "/dni/mu/site_info?country_code=TW",
+                {
+                    data: {
+                        data: {
+                            site_id: 1,
+                            site_currency: "TWD",
+                            site_currency_symbol: "NT$",
+                            user_lang: null,
+                            all_site_country_code: [
+                                {
+                                    path: "/",
+                                    blog_id: "1",
+                                    code: "TW",
+                                    country: "Taiwan",
+                                    main_language: "zh_TW",
+                                    currency_symbol: "NT$"
+                                }
+                            ],
+                            frontend_version: ""
+                        },
+                        status: 200,
+                        statusText: "",
+                        headers: {},
+                        config: {},
+                        request: {}
+                    },
+                    isValidating: false,
+                    isLoading: false
+                }
+            ]
+        ]));
     });
 
     // 前往會員中心
