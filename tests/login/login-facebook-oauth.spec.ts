@@ -1,6 +1,30 @@
 import { test, expect } from '@playwright/test';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
+    await page.goto('https://www.dogcatstar.com');
+
+    await page.evaluate(() => {
+        localStorage.setItem(
+            'https://www.dogcatstar.com',
+            JSON.stringify({
+                org_is_active: true,
+                channel_lang: 'zh-hant',
+                template_lang: 'zh-hant',
+                timezone: 'Asia/Taipei',
+                modules: {
+                    web_push: { enabled: false, config: null },
+                    ai_product_search: { enabled: false, config: null },
+                    ai_product_embed: { enabled: false, config: null },
+                },
+                error_tracking_config: {
+                    enabled_platforms: [],
+                    log_levels: [],
+                },
+                enabled_guid_providers: [],
+            })
+        );
+    });
+
     // 前往會員中心
     await page.goto('/visitor-my-account/');
     await page.waitForSelector('button:has-text("登入/註冊")', { timeout: 10000 });
