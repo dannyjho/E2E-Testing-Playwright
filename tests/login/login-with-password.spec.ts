@@ -6,23 +6,6 @@ test.describe.serial('OAuth Flow Tests', () => {
         // 前往會員中心頁面（直接進入目標畫面）
         await page.goto('/visitor-my-account/', { waitUntil: 'domcontentloaded' });
 
-        const localePopup = page.locator('select[data-testid="select-change-country"]');
-        if (await localePopup.isVisible({ timeout: 3000 })) {
-            // 選擇「台灣」
-            await page.locator('select[data-testid="select-change-country"]').selectOption('TW');
-
-            // 選擇「繁中（台灣）」
-            await page.locator('select[data-testid="select-change-locale"]').selectOption('zh_TW');
-
-            // 點擊「確定前往」
-            await page.getByRole('button', { name: '確定前往' }).click();
-
-            // 等待跳轉完成
-            await page.waitForLoadState('networkidle');
-        } else {
-            console.log('✅ Locale popup not shown, skipping locale switch.');
-        }
-
         // 等待 登入/註冊 按鈕出現並可點
         const registButton = page.getByRole('button', { name: '登入/註冊' });
         await expect(registButton).toBeVisible({ timeout: 10000 });
@@ -41,6 +24,24 @@ test.describe.serial('OAuth Flow Tests', () => {
         const loginButton = page.getByRole('button', { name: '登入/註冊' });
         await expect(loginButton).toBeVisible({ timeout: 10000 });
         await expect(loginButton).toBeEnabled({ timeout: 10000 });
+
+        const localePopup = page.locator('select[data-testid="select-change-country"]');
+        if (await localePopup.isVisible({ timeout: 3000 })) {
+            // 選擇「台灣」
+            await page.locator('select[data-testid="select-change-country"]').selectOption('TW');
+
+            // 選擇「繁中（台灣）」
+            await page.locator('select[data-testid="select-change-locale"]').selectOption('zh_TW');
+
+            // 點擊「確定前往」
+            await page.getByRole('button', { name: '確定前往' }).click();
+
+            // 等待跳轉完成
+            await page.waitForLoadState('networkidle');
+        } else {
+            console.log('✅ Locale popup not shown, skipping locale switch.');
+        }
+
         await loginButton.click();
 
         // 切換到 密碼登入
