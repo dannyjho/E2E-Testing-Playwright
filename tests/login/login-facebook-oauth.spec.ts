@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 
-test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
+test('TC06 - 取消 Facebook 快速登入成功', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name === 'chromium', '此測試不支援 Chromium');
+
     // 前往會員中心
     await page.goto('/visitor-my-account/');
 
