@@ -7,7 +7,7 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches: [main] 
 
 jobs:
   e2e-test:
@@ -32,6 +32,9 @@ jobs:
         run: npm install -g allure-commandline
 
       - name: Run Playwright tests and generate Allure results
+        env:
+          TEST_PHONE: ${{ secrets.TEST_PHONE }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         # 即使測試失敗，也讓後續繼續執行
         continue-on-error: true
         run: npx playwright test
@@ -47,7 +50,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Upload report to GitHub Pages
-        if: always()
+        if: always() && hashFiles('playwright-report/index.html') 
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

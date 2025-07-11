@@ -2,13 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",
-    "lib": ["DOM", "ESNext"],
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
     "strict": true,
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["playwright"]
+    "types": [
+      "node",
+      "playwright"
+    ],
   },
-  "include": ["tests"]
+  "include": [
+    "tests"
+  ]
 }
