@@ -4,10 +4,24 @@ import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 test.describe.serial('OAuth Flow Tests', () => {
     test('TC04 - 切換至密碼登入成功', async ({ page }) => {
         // 前往會員中心頁面（直接進入目標畫面）
-        await page.goto('/visitor-my-account/', {
-            waitUntil: 'load',
-            timeout: 120000
-        });
+        await page.goto('/visitor-my-account/');
+
+        try {
+            const popup = await page.waitForSelector('select[data-testid="select-change-country"]', {
+                timeout: 25000, // 最長等 25 秒
+                state: 'visible', // 確保是可見的
+            });
+
+            if (popup) {
+                console.log('Locale 彈窗出現，執行語系切換邏輯');
+                await page.selectOption('select[data-testid="select-change-country"]', 'TW');
+                await page.selectOption('select[data-testid="select-change-locale"]', 'zh_TW');
+                await page.click('button:has-text("確定前往")');
+                await page.waitForLoadState('networkidle');
+            }
+        } catch (e) {
+            console.log('⏱ Locale 彈窗沒有出現，略過語系切換');
+        }
 
         const countrySelect = page.locator('select[data-testid="select-change-country"]');
         const localeSelect = page.locator('select[data-testid="select-change-locale"]');

@@ -3,29 +3,23 @@ import { setLocaleToTaiwan } from '../helpers/setLocaleToTaiwan';
 
 test('TC06 - 取消 Facebook 快速登入成功', async ({ page }) => {
     // 前往會員中心
-    await page.goto('/visitor-my-account/', {
-        waitUntil: 'load',
-        timeout: 120000
-    });
-    const countrySelect = page.locator('select[data-testid="select-change-country"]');
-    const localeSelect = page.locator('select[data-testid="select-change-locale"]');
+    await page.goto('/visitor-my-account/');
 
-    if (await countrySelect.isVisible()) {
-        console.log('國家選單已出現，設定為 TW');
-        await countrySelect.selectOption('TW');
-
-        if (await localeSelect.isVisible()) {
-            await localeSelect.selectOption('zh_TW');
-        }
-
-        const confirmButton = page.getByRole('button', {
-            name: /^(確定前往|Proceed)$/,
+    try {
+        const popup = await page.waitForSelector('select[data-testid="select-change-country"]', {
+            timeout: 25000, // 最長等 25 秒
+            state: 'visible', // 確保是可見的
         });
-        await confirmButton.click();
-        if (await confirmButton.isVisible()) {
-            await confirmButton.click();
+
+        if (popup) {
+            console.log('Locale 彈窗出現，執行語系切換邏輯');
+            await page.selectOption('select[data-testid="select-change-country"]', 'TW');
+            await page.selectOption('select[data-testid="select-change-locale"]', 'zh_TW');
+            await page.click('button:has-text("確定前往")');
             await page.waitForLoadState('networkidle');
         }
+    } catch (e) {
+        console.log('⏱ Locale 彈窗沒有出現，略過語系切換');
     }
 
     // 等待 登入/註冊 按鈕出現並可點
